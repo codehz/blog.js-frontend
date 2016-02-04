@@ -1,23 +1,21 @@
 <style lang="stylus">
 .article-comment-section
-    margin-top 20px
-    padding 20px
+    margin 20px 0
     textarea
         resize none
+        padding 0 20px
         width 100%
         height 100px
         background none
         border none
-        margin 10px 0
-        padding 0px
+        resize none
+        overflow hidden
+        font-family inherit
+        transition all ease .7s
         &:focus
             outline: none !important;
     .button
-        padding 3px 10px
-        margin-left 15px
         float right
-    .clear-float
-        clear: both
 </style>
 
 <template>
@@ -25,10 +23,13 @@
         <comment-list :user="user" :article-id="articleId">
         </comment-list>
         <section class="blurred shadow flex-1 border-radius article-comment-section">
+            <label class="ui-label">评论</label>
             <textarea :placeholder="user ? '您的评论:' : '您需要注册或登陆才能发表评论'" :disabled='!user' @keyup="autogrow($event)" v-model="content" :style="contentStyle"></textarea>
-            <div class="button" @click="submit()">提交</div>
-            <div class="button" @click="clear()">清空</div>
-            <div class="clear-float"></div>
+            <div class="bottom-bar">
+                <div class="button" @click="submit()">提交</div>
+                <div class="button" @click="clear()">清空</div>
+                <div></div>
+            </div>
         </section>
     </section>
 </template>
@@ -60,6 +61,8 @@ export default {
             if (adjustedHeight > textarea.clientHeight) this.contentStyle.height = ~~(adjustedHeight + 100) + 'px';
         },
         submit() {
+            if (this.content.length < 5)
+                return this.$dispatch('popup', '评论长度过短');
             this.$http.post('article/' + this.articleId + '/comment', { content: this.content }).then(() => {
                 this.content = '';
                 this.$broadcast('needUpdate');

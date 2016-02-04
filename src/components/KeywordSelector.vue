@@ -1,24 +1,35 @@
 <style lang="stylus">
+@import "../main.styl"
 .keyword-selector-control
     margin-bottom 10px
+    margin-left 0
+    padding 0
+    input[type="text"]
+        margin-bottom 10px
     .control-container
-        > *
-            
-            margin 5px 0px
         img
+            margin-bottom 2px
+            margin-left 2px
             width 8px
             height 8px
-            margin-bottom 2px
             cursor pointer
+        .single
+            background main-color
+            font-size 14px
+            padding 5px 7px
+            box-shadow 0 1.5px 0 half
+            color white
+            &:first-child
+                padding-left 20px
 </style>
 
 <template>
     <div class="keyword-selector-control">
-        <input type="text" v-model="text" placeholder="关键词" @keyup.enter='submit'></input>
+        <input type="text" v-model="text" placeholder="添加关键词" @keyup.enter='submit'></input>
         <span class="control-container">
-            <span v-for="keyword in keywords" class="label-arrow label-arrow-right">
-                <img src="/static/res/close.png" @click="keywords.$remove(keyword)"></img>
+            <span v-for="keyword in keywords" class="single">
                 {{keyword}}
+                <img src="/static/res/close.png" @click="keywords.$remove(keyword)"></img>
             </span>
         </span>
     </div>

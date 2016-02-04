@@ -8,39 +8,50 @@ body
 
 body
     background-image url(/static/res/image.jpg)
+    background x-back
     display block
 
 .button
+    position relative
+    top 0
     display inline
     text-align center
-    background rgba(223, 163, 54, 1)
-    border-radius 3px
+    background main-color
+    box-shadow 0 1.5px 0 half, 0 0px 0 semi
     user-select none
     cursor pointer
+    color white
+    font-size 16px
+    padding 0 5px
+    transition all ease .1s
+    &:active
+        top 1.2px
+        box-shadow 0 0.3px 0 half, 0 -1.2px 0 semi
+    &.psuedo-button
+        background seco-color
 
 .category-button
-    background #FFEA78
+    background main-color
     padding 5px
-    margin 0px 3px
+    margin 0
 
 .fade-transition
-    transition opacity .3s ease
+    transition all .3s ease
 
-.fade-enter, .fade-leave
+.fade-enter
+.fade-leave
+    transform translate3D(0, -100%, 0)
     opacity 0
-
 
 .padding-space
     height 160px
+    transition height .7s ease
     display block
 
 .blurred
     display block
     background-image url(/static/res/image-blur.jpg)
-    transition box-shadow .3s ease
-    &:hover
-        transition box-shadow .3s ease
-        box-shadow inset 0 0 100px rgba(255, 255, 255, 0.5)
+    background x-back-blur
 
 .center
     margin-left auto
@@ -55,22 +66,23 @@ body
         bottom 0px
         left 0px
         width 100%
-        top 0%
-        box-shadow 0px 5px 10px rgba(0, 0, 0, 0.5)
+        top 0
+        box-shadow 0px 3px 0px rgba(0, 0, 0, 0.5)
         z-index -2
         transition all .3s ease
     &:hover
         &::before
             transition all .3s ease
-            box-shadow 0px 7.5px 15px rgba(0, 0, 0, 0.7)
+            box-shadow 0px 3px 0px rgba(0, 0, 0, 0.7)
 
 .shadow-top
-    box-shadow 0px 5px 10px rgba(0, 0, 0, 0.5)
+    box-shadow 0px 5px 0px rgba(0, 0, 0, 0.5)
 
 .blurred-trans
     position relative
     display block
     background-image url(/static/res/image.jpg)
+    background x-back
 
 #logo
     position relative
@@ -86,6 +98,7 @@ body
     mask-size 550px auto
     mask-repeat no-repeat
     mask-position 0px 100px
+    z-index 1
     & > img
         &:first-child
             position relative
@@ -101,7 +114,12 @@ body
 
 #title
     width 800px
+    transition all .7s ease
+    &::before
+        box-shadow 0px 5px 0px rgba(0, 0, 0, 0.5)
     &:hover
+        &::before
+            box-shadow 0px 5px 0px rgba(0, 0, 0, 0.7)
         & > #logo
             & > img
                 &:last-child
@@ -117,6 +135,12 @@ body
 .hide
     display none
 
+.nav-list
+    > a
+        text-decoration none
+        &:last-child
+            background seco-color
+
 .blurred,
 .blurred-trans,
 body
@@ -125,123 +149,152 @@ body
     background-repeat no-repeat
     background-position 50% 50%
 
-.border-radius,
-.shadow.border-radius:before
-    border-radius 3px
-
-#topbar-back
-    position fixed
-    width 100%
-    height 50px
-    top 0px
-    box-shadow 0px 5px 10px rgba(0, 0, 0, 0.5)
-    &.fixed-header
-        z-index 1
-
 #topbar
     position fixed
     width 100%
     height 50px
     top 0px
-    background rgba(255, 255, 255, 0.90)
-    background linear-gradient(top, #FFF, rgba(255, 255, 255, 0.90) 50%, rgba(255, 255, 255, 0.5))
-    opacity 0
+    opacity 1
     transition all .7s ease
-    z-index 5
+    z-index 2
+    transform translateZ(0)
+    &.fixed-header
+    &:hover
+        + #topbar-content
+        ~ #topbar-back
+            margin-top 0px
 
 #topbar-content
     position fixed
     width 100%
     height 50px
-    z-index 10
+    margin-top -50px
+    z-index 5
     top 0px
     cursor context-menu
     box-sizing content-box
+    opacity 1
+    transition margin-top .2s ease
+    transform translateZ(0)
+    &.fixed-header
+    &:hover
+        margin-top 0px
+        + #topbar-back
+            margin-top 0px
+        .right-box
+            margin-right 0
+        &:hover
+            .left-box
+                margin-left 0
+            ~ #normal-nav.hide-nav
+                opacity 0
+                margin-left 0
+                margin-right 0
+                .nav-list :first-child
+                    padding-left 120px
     div
         &.button
             text-decoration none
             height 20px
             line-height 50px
             padding 5px
-            margin-left 5px
+            box-shadow 0px 3px 0px half
+            &:active
+                top 2px
+                box-shadow 0px 1px 0px half, 0 -2px 0 semi
+
+#topbar-back
+    position fixed
+    width 100%
+    height 50px
+    margin-top -50px
+    top 0px
+    box-shadow 0px 5px 0px half
+    transition margin-top .2s ease
+    z-index 0
+    transform translateZ(0)
+
+.right-box
+    position absolute
+    right 0
+    margin-right -50%
+    transition margin-right .2s ease
+
+.left-box
+    width 100%
+    margin-left -50%
+    transition margin-left .2s ease
 
 #username-top
     line-height 50px
+    font-size 0
+    :last-child
+        padding-right 20px !important
 
-.box
-    display block
-    position absolute
+#normal-top
+    :last-child
+        padding-right 20px !important
 
-.header-contaniner
-    text-align center
-    display flex
-    align-items center
-    & > nav
-        text-align center
-        flex 1
-        color black
-        opacity 0
-        font-weight bolder
-        text-rendering optimizeLegibility
-        font-size large
-        transition opacity .7s ease
-
-.container
-    display flex
-    flex-direction column
-    flex-wrap wrap
-    margin 0 calc(20% - 100px)
-    margin-bottom 100px
-    transition all .7s ease
-    & > div
-        flex 1
-        & > section
-            display block
-            min-height 20px
-
-.container > nav,
-.container > div > section
-    margin 20px
-
-.flex-1
-    flex 1 1 300px
-
-.flex-2
-    flex 2 1 600px
-
-.flex-3
-    flex 4 1 800px
+nav
+    font-weight bolder
+    text-align left
 
 #abs-nav
     height 50px
     line-height 50px
+    flex 1
+    color black
+    opacity 0
+    text-rendering optimizeLegibility
+    transition all .7s ease
+    transform translateZ(0)
+    .nav-list
+        :first-child
+            padding-left 120px
+            margin 0
 
 #normal-nav
-    transition opacity .7s ease
+    transition all .7s ease
     height 50px
     margin-top 20px
     margin-bottom 0px
-    margin-left calc(20% - 80px)
-    margin-right calc(20% - 80px)
-    font-weight bolder
+    margin-left 100px
+    margin-right 100px
     line-height 50px
-    text-align center
-    opacity 1
-    z-index 1
-    &.nav-hide
-        transition all .7s ease
-        margin 0px
-        height 0px
-        margin-bottom 70px
-        opacity 0
-        font-size large
-        color transparent
-        &:before
-            box-shadow none
+    transform translateZ(0)
+    .nav-text > .button
+        padding 5px
+        padding-left 20px
+    .nav-list
+        :first-child
+            padding-left 20px
+            transition all .7s ease
+            margin 0
 
 .nav-show
     transition all .7s ease
     opacity 1 !important
+
+.container
+    display inline-block
+    margin-left 100px
+    margin-right 100px
+    margin-bottom 100px
+    width calc(100% - 200px)
+    transition all .7s ease
+    .article-view
+        width calc(100% - 420px)
+        float left
+        padding-bottom 3px;
+        overflow hidden
+    .aside-view
+        display inline-block
+        margin-top 20px
+        margin-left 20px
+        padding-bottom 10px
+        width 400px
+        float right
+        overflow hidden
 
 footer
     min-height 50px
@@ -266,7 +319,6 @@ footer
     div
         flex 1 1 50px
     input
-        background transparent
         outline none
         border none
         font 16px Arial, Helvetica, sans-serif
@@ -274,7 +326,7 @@ footer
         padding 0 10px
         width calc(100% - 20px)
         z-index 5
-        box-shadow inset 0 5px 10px rgba(0, 0, 0, 0.5)
+        box-shadow inset 0 3px 0px rgba(0, 0, 0, 0.5)
 
 .panel-anim-transition
     transition all .1s ease
@@ -356,7 +408,15 @@ footer
     #title
         width 100%
         padding-top 50px
-        border-radius 0px
+    #abs-nav .nav-list :first-child
+        padding-left 20px
+        margin 0
+    #normal-nav
+        margin 0
+        width 100%
+    .container
+        margin 0
+        width 100%
     #logo
         padding-top 50px
         padding-bottom 35px
@@ -366,38 +426,65 @@ footer
         margin-left auto
         margin-right auto
     .padding-space
-        display none
+        height 0
     #logo>img:first-child
     #logo>img:last-child
         width 100%
         height auto
 
-@media (max-width: 799px)
+@media (max-width: 959px)
     .container
-        margin 10px
-    #normal-nav
-        margin-left 30px
-        margin-right 30px
+        .article-view
+            width 100%
+        .aside-view
+            width 100%
+            float none
+            margin-left 0
 
 @media (min-aspect-ratio: 17/8)
     #main
         top 0px
     #title
         width 100%
+    .padding-space
+        height 0
 
+code
+    font-family monospace
+
+.ui-label
+    background semi
+    display block
+    font-size large
+    padding 5px 20px
+    margin 10px 0
+    margin-top 10px
+
+.bottom-bar
+    margin 0
+    padding 0
+    padding-top 5px
+    padding-bottom 20px
+    background semi
+    :first-child
+        padding-right 20px
+    :last-child
+        clear both
+[v-cloak]
+    display none
 </style>
 <template>
     <div id="main">
-        <div id="topbar-content">
-            <div class="box" style="right: 10px;z-index: 2;">
+        <div id="topbar" :class="{ 'fixed-header': !fix }"></div>
+        <div id="topbar-content" :class="{ 'fixed-header': !fix }">
+            <div class="right-box" style="z-index: 2;">
                 <div class="space"></div>
-                <template v-if="!user && lrstate == 0">
-                    <div class="button" @click="toLogin()">登陆</div>
-                    <div class="button" @click="toRegister()">加入Blog.js</div>
-                </template>
+                <div id="normal-top" v-if="!user && lrstate == 0">
+                    <div class="button" @click="toLogin()">登陆</div><div class="button" @click="toRegister()">加入Blog.js</div>
+                </div>
                 <template v-else>
                     <div id="username-top" v-if="user">
-                        欢迎回来{{user.name}}
+                        <div class="psuedo-button button top-button">欢迎回来{{user.name}}</div>
                         <div class="button top-button" @click="logout()">登出</div>
                         <div class="button top-button" @click="toCMD()" v-if="user.superuser">进入控制台</div>
                     </div>
@@ -406,28 +493,24 @@ footer
                     </div>
                 </template>
             </div>
-            <div class="header-contaniner">
-                <nav id="abs-nav" :class="{ 'nav-show': fix }" @click="goTop()">
-                    <template v-if="navType == 0">
-                        {{navText}}
-                    </template>
-                    <template v-else>
-                        <div class="button category-button" v-for="item in navData">{{item}}</div>
-                    </template>
+            <div class="left-box">
+                <nav id="abs-nav" :class="{ 'nav-show': fix }">
+                    <div class="nav-list" v-else>
+                        <a class="button category-button" v-for="item in navData" @click="onNavPress($index, item.url)">{{item.text}}</a>
+                    </div>
                 </nav>
             </div>
         </div>
-        <div id="topbar" :class="{ 'fixed-header': fix }"></div>
-        <div id="topbar-back" class="blurred" :class="{ 'fixed-header': fix }"></div>
-        <div class="blurred shadow border-radius center" id="title" @click="goHome()">
+        <div id="topbar-back" class="blurred" :class="{ 'fixed-header': !fix }"></div>
+        <div class="blurred shadow center" id="title" @click="goHome()">
             <div class="panel" v-if="!user && lrstate == 1" transition="panel-anim">
-                <input class="border-radius blurred-trans"
+                <input class="blurred-trans"
                     type="email"
                     name="email"
                     placeholder="Email"
                     v-model="loginform.email"
                     id="login-first" />
-                <input class="border-radius blurred-trans"
+                <input class="blurred-trans"
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -436,22 +519,22 @@ footer
                 <div class="button" @click="closePanel()">关闭</div>
             </div>
             <div class="panel" v-if="!user && lrstate == 2" transition="panel-anim">
-                <input class="border-radius blurred-trans"
+                <input class="blurred-trans"
                     type="text" name="name"
                     placeholder="Username"
                     v-model="regform.name"
                     id="register-first" />
-                <input class="border-radius blurred-trans"
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    v-model="regform.email" />
-                <input class="border-radius blurred-trans"
+                <input class="blurred-trans"
                     type="tel"
                     name="phone"
                     placeholder="Phone"
                     v-model="regform.phone" />
-                <input class="border-radius blurred-trans"
+                <input class="blurred-trans"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    v-model="regform.email" />
+                <input class="blurred-trans"
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -465,23 +548,28 @@ footer
         </div>
         <div class="padding-space">
         </div>
-        <nav id="normal-nav" class="blurred shadow border-radius" :class="{ 'nav-hide': fix }">
-            <template v-if="navType == 0">
-                {{navText}}
-            </template>
-            <template v-else>
-                <div class="button category-button" v-for="item in navData">{{item}}</div>
-            </template>
+        <nav id="normal-nav" class="blurred shadow" :class="{ 'hide-nav': fix }">
+            <div class="nav-list" v-else>
+                <a class="button category-button" v-for="item in navData" @click="onNavPress($index, item.url)">{{item.text}}</a>
+            </div>
         </nav>
-        <div class="container">
-            <router-view
-                :user="user"
-                class="view"
-                transition="fade"
-                transition-mode="out-in">
-            </router-view>
+        <div class="container" v-cloak>
+            <div class="article-view">
+                <router-view
+                    :user="user"
+                    :data_ready="data_ready"
+                    class="view"
+                    transition="fade"
+                    transition-mode="out-in">
+                </router-view>
+            </div>
+            <aside class="aside-view">
+                <search-panel></search-panel>
+                <category-list></category-list>
+                <keyword-list :user="user"></keyword-list>
+            </aside>
         </div>
-        <footer class="blurred shadow" style="z-index:20">
+        <footer id="footer-fix" class="blurred" style="z-index:20">
             本项目开源：http://github.com/CodeHz/blog.js
         </footer>
     </div>
@@ -489,16 +577,22 @@ footer
 <script>
 import Vue from 'vue'
 import config from '../config'
+import debounce from 'debounce'
+import SearchPanel from './SearchPanel.vue'
+import CategoryList from './CategoryList.vue'
+import KeywordList from './KeywordList.vue'
+const baseData = {text: 'Blog.js', url: '/'};
 export default {
     name: 'App',
     data() {
         return {
             user: null,
+            mobile: false,
             fix: false,
             lrstate: 0,
-            navType: 1,
-            navText: "TE ST",
-            navData: [],
+            navData: [{text: 'Blog.js', url: '/'}],
+            data_loaded: false,
+            data_ready: false,
             loginform: {
                 email: "",
                 password: ""
@@ -518,7 +612,7 @@ export default {
                 localStorage.setItem('token', value);
                 if (value)
                     this.getUser(() => this.token = undefined)
-                        
+
             },
             get: function() {
                 return this.$http.headers.common['Authorization']
@@ -526,32 +620,24 @@ export default {
         }
     },
     events: {
-        updateTitle({title, type}) {
-            this.navText = title;
-            this.navType = type;
-            if (type == 1) this.refresh();
+        updateTitle({paths}) {
+            if (paths) this.navData = [baseData,...paths];
         }
     },
     methods: {
-        refresh() {
-            this.$http.get('category').then(({data}) => this.navData = data.body.map(value => value.name));
-        },
         login() {
             this.$http.post('login', this.loginform).then(({data}) => this.token = data.body.token);
             this.closePanel();
-            this.refresh();
             this.$broadcast('needUpdate');
         },
         register() {
             this.$http.post('register', this.regform).then(({data}) => this.token = data.body.token);
             this.closePanel();
-            this.refresh();
             this.$broadcast('needUpdate');
         },
         logout() {
             this.token = undefined;
             this.user = null;
-            this.refresh();
             this.$broadcast('needUpdate');
         },
         toLogin() {
@@ -576,53 +662,79 @@ export default {
             this.$nextTick(() => window.scrollTo(0, 0));
         },
         getUser(err) {
-            if (!this.token) return;
-            this.$http.get('me').then(({data}) => this.user = data.body, ({status}) => status == 401 ? err() : 0);
-            this.refresh();
+            if (!this.token) {
+                this.data_ready = true;
+                return;
+            }
+            this.$http.get('me').then(({data}) => {
+                this.user = data.body;
+                this.data_ready = true;
+            }, ({status}) => {
+                this.data_ready = true;
+            });
+        },
+        onNavPress(index, url) {
+            if (index == 0) {
+                window.history.back();
+            } else {
+                this.$router.go(url);
+            }
         },
         toCMD() {
             this.$router.go('/control');
         }
     },
-    ready() {
-        console.log('UA: ', navigator.userAgent);
-        if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-            document.getElementById("logo").className = document.getElementById("logo").className.replace
-                ( /(?:^|\s)blurred-trans(?!\S)/g , '' );
-        }
-        if (/MSIE/i.test(navigator.userAgent) || /EDGE/i.test(navigator.userAgent)) {
-            var sheet = document.createElement('style');
-            sheet.innerHTML = ".blurred {background: rgba(255, 255, 255, 0.5) !important;}\n" + 
-                ".blurred-trans {background: transparent !important;}";
-            document.body.appendChild(sheet);
-        }
-        if (/Android/i.test(navigator.userAgent)) {
-            var sheet = document.createElement('style');
-            sheet.innerHTML = ".blurred {background: rgba(255, 255, 255, 0.5) !important;}\n" +
-                ".blurred-trans {background: transparent !important;}\n" +
-                "body {background: none !important}\n" +
-                ".container,.container > nav,.container > div > section {" +
-                "margin: 0px !important; border-radius: 0px !important;}";
-            document.body.appendChild(sheet);
+    components: {
+        SearchPanel, CategoryList, KeywordList
+    },
+    watch: {
+        data_ready(value) {
+            if (value && this.data_loaded) {
+                this.$broadcast('needUpdate');
+            }
         }
     },
-    created() {
+    ready() {
+        console.log('UA: ', navigator.userAgent);
+        // if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+        //     document.getElementById("logo").className = document.getElementById("logo").className.replace
+        //         ( /(?:^|\s)blurred-trans(?!\S)/g , '' );
+        // }
+        // if (/MSIE/i.test(navigator.userAgent) || /EDGE/i.test(navigator.userAgent)) {
+        //     var sheet = document.createE lement('style');
+        //     sheet.innerHTML = ".blurred {background: rgba(255, 255, 255, 0.5) !important;}\n" +
+        //         ".blurred-trans {background: transparent !important;}\n" +
+        //         "#logo > img {background: url(/static/res/text.png);background-size: 100% 100%; opacity: 0.2 }";
+        //     document.body.appendChild(sheet);
+        // }
+        // if (/Android/i.test(navigator.userAgent)) {
+        //     var sheet = document.createElement('style');
+        //     sheet.innerHTML = "#title{display: none}\n" +
+        //         ".blurred {background: rgba(255, 255, 255, 1) !important;}\n" +
+        //         ".blurred-trans {background: transparent !important;}\n" +
+        //         "body {background: none !important}" +
+        //     document.body.appendChild(sheet);
+        //     this.mobile = true;
+        // }
         let mainEl = document.getElementById("main");
         let h = document.getElementById("normal-nav");
-        function getDistance() {
-            h = h ? h : document.getElementById("normal-nav");
-            var topDist = h.offsetTop;
+        function getDistance(el) {
+            var topDist = el.offsetTop;
             return topDist;
         }
 
-        window.onscroll = (e) => {
-            mainEl = mainEl ? mainEl : document.getElementById("main");
-            var distance = getDistance() - window.pageYOffset + parseInt(window.getComputedStyle(mainEl, null).top) - 50;
-            this.fix = distance < 0;
+        if (!this.mobile)
+            window.onscroll = debounce((e) => {
+                var distance = getDistance(h) - window.pageYOffset + parseInt(window.getComputedStyle(mainEl, null).top) - 50;
+                this.fix = distance < 0;
+            }, 100);
+        if (this.data_ready && !this.data_loaded) {
+            this.$broadcast('needUpdate');
         }
-        this.refresh();
-        this.getUser();
-        
+        this.$nextTick(() => this.data_loaded = true);
+    },
+    created() {
+         this.getUser();
     }
 }
 </script>

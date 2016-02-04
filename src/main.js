@@ -8,58 +8,20 @@ import ControlView from './components/ControlView.vue'
 import ControlIndexView from './components/ControlIndexView.vue'
 import ArticleEditor from './components/ArticleEditor.vue'
 import ArticleView from './components/ArticleView.vue'
+import SearchView from './components/SearchView.vue'
+import marked from 'marked'
+marked.setOptions({ headerPrefix: 'content-'});
 
 // install router
 Vue.use(Router);
 // install vue resource
 Vue.use(require('vue-resource'));
 
-if(!window.localStorage && /MSIE/.test(navigator.userAgent)){ 
-    if(!window.UserData) { 
-        window.UserData = function(file_name) { 
-            if(!file_name) file_name="user_data_default"; 
-            var dom = document.createElement('input'); 
-            dom.type = "hidden"; 
-            dom.addBehavior ("#default#userData"); 
-            document.body.appendChild(dom); 
-            dom.save(file_name); 
-            this.file_name = file_name; 
-            this.dom = dom; 
-            return this; 
-        };
-
-        window.UserData.prototype = { 
-            setItem:function(k, v) 
-            { 
-                this.dom.setAttribute(k,v); 
-                this.dom.save(this.file_name); 
-            }, 
-            getItem:function(k){ 
-                this.dom.load(this.file_name); 
-                return this.dom.getAttribute(k); 
-            }, 
-            removeItem:function(k){ 
-                this.dom.removeAttribute(k); 
-                this.dom.save(this.file_name); 
-            },
-
-            clear:function() { 
-               this.dom.load(this.file_name); 
-               var now = new Date(); 
-               now = new Date(now.getTime()-1); 
-               this.dom.expires = now.toUTCString(); 
-               this.dom.save(this.file_name); 
-            }
-        };
-    } 
-    window.localStorage= new window.UserData("local_storage"); 
-}
-
-
 // config vue-resource
 Vue.http.options.root = config.base_url;
 Vue.http.headers.common['Content-Type'] = 'application/json';
-Vue.http.headers.common['Authorization'] = localStorage.getItem("token");
+if (localStorage.getItem("token") != 'undefined')
+    Vue.http.headers.common['Authorization'] = localStorage.getItem("token");
 
 // register filters globally
 Vue.filter('fromNow', fromNow);
@@ -73,6 +35,7 @@ var router = new Router();
 
 router.map({
     '/': {
+        name: 'root',
         component: ListView
     },
     '/article/:articleId': {
@@ -80,6 +43,7 @@ router.map({
         component: ArticleView
     },
     '/control': {
+        name: 'control',
         component: ControlView,
         subRoutes: {
             '/': {
@@ -90,6 +54,10 @@ router.map({
                 component: ArticleEditor
             }
         }
+    },
+    '/search/:searchOption': {
+        name: 'search',
+        component: SearchView
     }
 });
 

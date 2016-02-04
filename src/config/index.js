@@ -1,3 +1,3 @@
 export default {
-    base_url: '/api'
+    base_url: 'http://blogjs.net/api'
 }

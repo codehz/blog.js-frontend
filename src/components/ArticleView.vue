@@ -1,48 +1,47 @@
 <style lang="stylus">
-.article-section
+@import "../main.styl"
+.article-parent
     position relative
-    padding-bottom 60px
-    
-    .section-time,
-    .section-modify,
-    .section-remove,
-    .section-author
-        margin 20px
-        margin-bottom 20px
-        float right
-
-    .section-modify
-    .section-remove,
-        user-select none
-        cursor pointer
-
-    .section-keywords
-        clear both
-        position absolute
-        bottom 20px
-        left 12px
-        & > div
-            &.button
-                margin 5px
-                padding 3px
-                background #FFEA78
-
-    .section-content
+    margin 0
+    margin-top 20px
+    padding 0
+    width 100%
+    article
         padding-top 20px
-        margin 0px 20px
+
+    .section-time
+    .section-author
+    .section-modify
+    .section-remove
+        float right
+    .section-time
+    .section-author
+        margin-left 20px
+    .section-time
+        margin-right 20px
+    .section-container
+        background semi
+        padding-top 5px
+        padding-bottom 20px
+        :last-child
+            clear both
+
 </style>
 <template>
-    <div class="flex-column border-radius-container" >
-        <section class="blurred shadow flex-1 border-radius article-section" v-if="article">
-            <div class="section-content" v-html='article.content | marked'></div>
-            <div class="section-time">{{article.created_at | fromNow}}</div>
-            <div class="section-author">{{article.user.name}}</div>
-            <div class="section-modify" @click="toEdit()" v-if="user && user.superuser">修改</div>
-            <div class="section-remove" @click="toRemove()" v-if="user && user.superuser">删除</div>
-            <div class="section-keywords">
-                <div class="button" v-for="keyword in article.keywords">{{keyword}}</div>
+    <div class="article-parent">
+        <article class="blurred shadow border-radius" v-if="article">
+            <content-renderer :content='article.content'></content-renderer>
+            <div class="section-container">
+                <div class="section-time">{{article.created_at | fromNow}}</div>
+                <div class="section-author">{{article.user.name}}</div>
+                <div class="section-modify button" @click="toEdit()" v-if="user && user.superuser">修改</div>
+                <div class="section-remove button" @click="toRemove()" v-if="user && user.superuser">删除</div>
+                <div class="section-keywords">
+                    <div class="button" v-for="keyword in article.keywords">{{keyword}}</div>
+                </div>
+                <div></div>
             </div>
-        </section>
+        </article>
         <section v-if="article">
             <comment-panel :user="user" :article-id="articleId">
             </comment-panel>
@@ -51,8 +50,9 @@
 </template>
 <script>
 import config from '../config'
+import $ from 'jquery'
 import CommentPanel from './CommentPanel.vue'
-import marked from 'marked'
+import ContentRenderer from './ContentRenderer.vue'
 export default {
     name: 'ArticleView',
     data: () => ({
@@ -60,36 +60,32 @@ export default {
         articleId: -1
     }),
     components: {
-        CommentPanel
+        CommentPanel,
+        ContentRenderer
     },
     route: {
         data({ to }) {
             this.articleId = +to.params.articleId;
-            this.refresh();
-        },
-        
-        activate() {
             this.navType = 0;
-            this.$nextTick(() => window.scrollTo(0, document.getElementById("normal-nav").offsetTop + 200));
+            this.$nextTick(() => window.scrollTo(0, $("#normal-nav").offset().top + 1));
+            if (this.data_ready) this.$nextTick(this.refresh);
         }
     },
     props: {
-        user: null
+        user: null,
+        data_ready: null
     },
     events: {
         needUpdate() {
-            this.refresh();
+            this.$nextTick(this.refresh);
         }
-    },
-    filters: {
-        marked: marked
     },
     methods: {
         refresh() {
-            this.$http.get((this.user ? 'article/' : 'public/article/') + this.articleId). then(({data}) => {
+            console.log(this.user);
+            this.$http.get((this.user ? 'article/' : 'public/article/') + this.articleId).then(({data}) => {
                 this.article = data.body;
-                this.$dispatch('updateTitle', { title: this.article.title, type: 0 });
-                this.$broadcast('needUpdate');
+                this.$dispatch('updateTitle', { paths: [{text: this.article.title, url: '/article/' + this.articleId}] });
             });
         },
         toEdit() {

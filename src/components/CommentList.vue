@@ -1,13 +1,13 @@
 <style lang="stylus">
 .article-comment-list-section
-    padding 20px
+    padding-bottom 10px
     .tip
-        margin-top: 10px;
+        padding 0 20px
 </style>
 
 <template>
     <section class="blurred shadow flex-1 border-radius article-comment-list-section">
-        <div class="section-title">评论列表</div>
+        <label class="ui-label">评论列表</label>
         <div v-if="comments.length != 0">
             <comment-node :comments="comments" :superuser="user && user.superuser" :user="user">
             </comment-node>
@@ -46,11 +46,11 @@ export default {
             });
         },
         switchPublic({target}) {
-            this.$http.put('article/' + this.articleId + '/comment/' + target.id, target, { emulateHTTP: true })
+            this.$http.put('article/' + this.articleId + '/comment/' + target.id, target)
                 .then(() => this.refresh());
         },
         removeComment({target}) {
-            this.$http.delete('article/' + this.articleId + '/comment/' + target.id, target, { emulateHTTP: true })
+            this.$http.delete('article/' + this.articleId + '/comment/' + target.id, target)
                 .then(() => this.refresh());
         },
         needUpdate() {
